@@ -9,6 +9,7 @@ __email__ = 'vitowalter.anelli@poliba.it, claudio.pomo@poliba.it'
 
 import importlib
 import sys
+import os
 from os import path
 
 import numpy as np
@@ -220,4 +221,21 @@ def config_test(builder, base):
 
 
 if __name__ == '__main__':
-    run_experiment("./config/config.yml")
+    #os.chdir('../')
+    print(os.getcwd())
+
+    #run_experiment("./config/config.yml")
+
+    #run_experiment("./config/ml1m08_KNN.yml")
+
+    #run_experiment("./config/lt10_KNN.yml")
+
+    #run_experiment("./config/ml1m10_KNN.yml")
+    #run_experiment("./config/ml1m10_SVDpp.yml")
+    #run_experiment("./config/ml1m10_iALS.yml")
+    ####### run_experiment("./config/ml1m10_VSM.yml")
+    #run_experiment("./config/ml1m10_MultiVAE.yml")
+    #run_experiment("./config/ml1m10_LightGCN.yml")
+
+    #run_experiment("./config/ml1m10_all.yml")
+    run_experiment("./config/lt10_all.yml")
