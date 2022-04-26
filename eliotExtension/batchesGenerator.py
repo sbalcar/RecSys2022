@@ -10,14 +10,14 @@ from elliot.run import run_experiment
 def getExperimentStr(datasetID:str, datasetPart:str, granularity:str):
 
     experiment:str = """experiment:
-  dataset: <datasetID>-Part<datasetPart>-Stars<granularity>
+  dataset: <datasetID>-Part<datasetPart>-Gran<granularity>
 #  path_output_rec_result: ../results/<datasetID>/<granularity>/recs
 #  path_output_rec_weight: ../results/<datasetID>/<granularity>/weight
 #  path_output_rec_performance: ../results/<datasetID>/<granularity>/performance
-  path_log_folder: ../results/<datasetID>-Part<datasetPart>-Stars<granularity>/log
+  path_log_folder: ../results/<datasetID>-Part<datasetPart>-Gran<granularity>/log
   data_config:
     strategy: dataset
-    dataset_path: ../data/<datasetID>/<datasetID>-Part<datasetPart>-Stars<granularity>.tsv
+    dataset_path: ../data/<datasetID>/<datasetID>-Part<datasetPart>-Gran<granularity>.tsv
   splitting:
     save_on_disk: True
     save_folder: ../data/<datasetID>-Part<datasetPart>/split/<granularity>
@@ -83,7 +83,7 @@ def generateBatches():
                 datasetPartStrI = str(datasetPartI)
                 if datasetPartI < 100:
                     datasetPartStrI = "0" + str(datasetPartI)
-                batchID:str = datasetIdI + "-Part" + str(datasetPartI) + "-Gran" + granularityI
+                batchID:str = datasetIdI + "-Part" + datasetPartStrI + "-Gran" + granularityI
                 experimentStr:str = getExperimentStr(datasetIdI, datasetPartStrI, granularityI)
 
                 f = open("./batches/" + batchID + ".yml", "wt")
