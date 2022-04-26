@@ -83,7 +83,7 @@ def generateBatches():
                 datasetPartStrI = str(datasetPartI)
                 if datasetPartI < 100:
                     datasetPartStrI = "0" + str(datasetPartI)
-                batchID:str = datasetIdI + "-" + str(datasetPartI) + "-Gran" + granularityI
+                batchID:str = datasetIdI + "-Part" + str(datasetPartI) + "-Gran" + granularityI
                 experimentStr:str = getExperimentStr(datasetIdI, datasetPartStrI, granularityI)
 
                 f = open("./batches/" + batchID + ".yml", "wt")
