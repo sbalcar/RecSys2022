@@ -4,7 +4,7 @@ import requests
 import os
 import numpy as np
 import pandas as pd
-
+from pandas import DataFrame
 
 def divideMl1mDataset():
     print("Divide Ml1m Dataset")
@@ -20,26 +20,19 @@ def divideMl1mDataset():
     ratingsStars10_df = ratings_df.copy()
     ratingsStars10_df["rating"] = 2 * ratingsStars10_df["rating"]
 
-    ratingsStars02_df, ratingsStars03_df, ratingsStars05_df, ratingsStars08_df = divideGeneralDataset(ratingsStars10_df)
+    ratingsStars_dic:Dict[DataFrame] = divideGeneralDataset(ratingsStars10_df)
 
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for datasetPartI in datasetParts:
-        if datasetPartI < 100:
-            partI = "Part0" + str(datasetPartI)
-        else:
+        partI = "Part0" + str(datasetPartI)
+        if datasetPartI == 100:
             partI = "Part" + str(datasetPartI)
-
-        ratingsStars10Sel_df = ratingsStars10_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars08Sel_df = ratingsStars08_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars05Sel_df = ratingsStars05_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars03Sel_df = ratingsStars03_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars02Sel_df = ratingsStars02_df.copy().sample(frac=datasetPartI/100)
-
-        ratingsStars10Sel_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars10.tsv", sep = "\t", index=False, header=False)
-        ratingsStars08Sel_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars08.tsv", sep = "\t", index=False, header=False)
-        ratingsStars05Sel_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars05.tsv", sep = "\t", index=False, header=False)
-        ratingsStars03Sel_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars03.tsv", sep = "\t", index=False, header=False)
-        ratingsStars02Sel_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars02.tsv", sep = "\t", index=False, header=False)
+        for starsI, ratingsStarI_df in ratingsStars_dic.items():
+            starsStrI:str = "0" + str(starsI)
+            if starsI == 10:
+                starsStrI: str = str(starsI)
+            ratingsStarSelI_df = ratingsStarI_df.copy().sample(frac=datasetPartI/100)
+            ratingsStarSelI_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars" + starsStrI + ".tsv", sep = "\t", index=False, header=False)
 
 
 
@@ -54,7 +47,7 @@ def divideLTDataset():
                  names= ['userId','itemId','rating'],
                  delim_whitespace=True)
 
-    ratingsStars02_df, ratingsStars03_df, ratingsStars05_df, ratingsStars08_df = divideGeneralDataset(ratingsStars10_df)
+    ratingsStars_dic:Dict[DataFrame] = divideGeneralDataset(ratingsStars10_df)
 
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for datasetPartI in datasetParts:
@@ -62,24 +55,16 @@ def divideLTDataset():
             partI = "Part0" + str(datasetPartI)
         else:
             partI = "Part" + str(datasetPartI)
-
-        ratingsStars10Sel_df = ratingsStars10_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars08Sel_df = ratingsStars08_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars05Sel_df = ratingsStars05_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars03Sel_df = ratingsStars03_df.copy().sample(frac=datasetPartI/100)
-        ratingsStars02Sel_df = ratingsStars02_df.copy().sample(frac=datasetPartI/100)
-
-        ratingsStars10Sel_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars10.tsv", sep = "\t", index=False, header=False)
-        ratingsStars08Sel_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars08.tsv", sep = "\t", index=False, header=False)
-        ratingsStars05Sel_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars05.tsv", sep = "\t", index=False, header=False)
-        ratingsStars03Sel_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars03.tsv", sep = "\t", index=False, header=False)
-        ratingsStars02Sel_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars02.tsv", sep = "\t", index=False, header=False)
+        for starsI, ratingsStarI_df in ratingsStars_dic.items():
+            starsStrI:str = "0" + str(starsI)
+            if starsI == 10:
+                starsStrI: str = str(starsI)
+            ratingsStarSelI_df = ratingsStarI_df.copy().sample(frac=datasetPartI/100)
+            ratingsStarSelI_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars" + starsStrI + ".tsv", sep = "\t", index=False, header=False)
 
 
-    #print(ratingsStars10_df.head(20))
 
-
-def divideGeneralDataset(ratings10_df):
+def divideGeneralDataset_(ratings10_df):
     ratings08_df = ratings10_df.copy()  # 3U4 and 6U7    [3,4]->3, 5->4, 6->5, [7,8]->6, 9->7, 10->8
     ratings08_df["rating"] = ratings08_df["rating"].apply(lambda x: x - 1 if x in [4, 5, 6, 7] else x)
     ratings08_df["rating"] = ratings08_df["rating"].apply(lambda x: x - 2 if x in [8, 9, 10] else x)
@@ -99,9 +84,37 @@ def divideGeneralDataset(ratings10_df):
     return (ratings02_df, ratings03_df, ratings05_df, ratings08_df)
 
 
+def divideGeneralDataset(ratings10_df):
+    print(ratings10_df.head(20))
+
+    ratingsNorm_df = ratings10_df.copy()
+    # normalisation fnc    norm_rating = (rating - np.min(rating)) / (np.max(rating)-np.min(rating))
+    ratingsNorm_df["rating"] = ratingsNorm_df["rating"].apply(lambda rating: (rating -1) / (10-1))
+
+    # normalisation fnc np.round(norm_rating * (k_max - k_min) + k_min)
+    r_dict:Dict = {}
+    for maxStarI in [2,3,4,5,6,7,8,9,10]:
+        ratingsI_df = ratingsNorm_df.copy()
+        ratingsI_df["rating"] = ratingsI_df["rating"].apply(lambda nRating: np.round(nRating * (maxStarI - 1) +1))
+        r_dict[maxStarI] = ratingsI_df
+    return r_dict
+
+
 def generateDatasets():
     divideMl1mDataset()
     divideLTDataset()
+
+
+def mappingStarsInReduction():
+    rating = [0,1,2,3,4,5,6,7,8,9]
+    norm_rating = (rating - np.min(rating)) / (np.max(rating)-np.min(rating))
+    print(norm_rating)
+
+    k_max = 7
+    k_min = 1
+    reduced_rating = np.round(norm_rating * (k_max - k_min) + k_min)
+    print(reduced_rating)
+
 
 
 if __name__ == "__main__":
@@ -109,3 +122,5 @@ if __name__ == "__main__":
     print(os.getcwd())
 
     generateDatasets()
+
+    #mappingStarsInReduction()

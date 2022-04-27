@@ -7,9 +7,9 @@ from typing import List
 
 from elliot.run import run_experiment
 
-def getExperimentStr(datasetID:str, datasetPart:str, granularity:str):
+class ExperimentBuilder:
 
-    experiment:str = """experiment:
+    experimentDef:str = """experiment:
   dataset: <datasetID>-Part<datasetPart>-Stars<granularity>
 #  path_output_rec_result: ../results/<datasetID>/<granularity>/recs
 #  path_output_rec_weight: ../results/<datasetID>/<granularity>/weight
@@ -63,13 +63,18 @@ def getExperimentStr(datasetID:str, datasetPart:str, granularity:str):
         save_recs: True
 """
 
-    experiment = experiment.replace("<datasetID>", datasetID)
-    experiment = experiment.replace("<granularity>", granularity)
-    experiment = experiment.replace("<datasetPart>", datasetPart)
-    #experiment = experiment + algItemKNN
-    experiment = experiment + algiALS
+    @staticmethod
+    def getExperimentStr(datasetID:str, datasetPart:str, granularity:str, algorithms:List[str]):
 
-    return experiment
+        experimentStr = ExperimentBuilder.experimentDef.replace("<datasetID>", datasetID)
+        experimentStr = experimentStr.replace("<datasetPart>", datasetPart)
+        experimentStr = experimentStr.replace("<granularity>", granularity)
+
+        for algorithmI in algorithms:
+            experimentStr = experimentStr + algorithmI
+
+        return experimentStr
+
 
 def generateBatches():
 
@@ -84,13 +89,13 @@ def generateBatches():
                 if datasetPartI < 100:
                     datasetPartStrI = "0" + str(datasetPartI)
                 batchID:str = datasetIdI + "-Part" + datasetPartStrI + "-Stars" + granularityI
-                experimentStr:str = getExperimentStr(datasetIdI, datasetPartStrI, granularityI)
+                experimentStr:str = ExperimentBuilder.getExperimentStr(datasetIdI, datasetPartStrI, granularityI,
+                                [ExperimentBuilder.algiALS])
+                                #[ExperimentBuilder.algItemKNN])
 
-                f = open("./batches/" + batchID + ".yml", "wt")
+                f = open("./batches" + os.sep + batchID + ".yml", "wt")
                 f.write(experimentStr)
                 f.close()
-
-#    run_experiment("./config/pokus.yml")
 
 
 if __name__ == "__main__":

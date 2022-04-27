@@ -10,7 +10,7 @@ from elliot.run import run_experiment
 
 def runner():
     batchPath = "input"
-    onlyfiles = [f for f in listdir(batchPath) if isfile(join(batchPath, f))]
+    onlyfiles = [f for f in listdir(batchPath) if isfile(join(batchPath, f)) if not f.startswith(".")]
 
     for batchFileI in onlyfiles:
         print(batchFileI)
@@ -23,7 +23,7 @@ def runner():
             os.remove(batchPath + os.sep + batchFileI)
             continue
 
-        # os.remove(batchPath + os.sep + batchFileI)
+        #os.remove(batchPath + os.sep + batchFileI)
         #os.renames(batchPath + os.sep + batchFileI, batchPath + os.sep + 'zzz.yml')
         #run_experiment(batchPath + os.sep + 'zzz.yml')
         run_experiment(batchPath + os.sep + batchFileI)
