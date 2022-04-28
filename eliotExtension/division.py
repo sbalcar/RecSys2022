@@ -5,6 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from sklearn.utils import shuffle
 
 def divideMl1mDataset():
     print("Divide Ml1m Dataset")
@@ -20,19 +21,42 @@ def divideMl1mDataset():
     ratingsStars10_df = ratings_df.copy()
     ratingsStars10_df["rating"] = 2 * ratingsStars10_df["rating"]
 
-    ratingsStars_dic:Dict[DataFrame] = divideGeneralDataset(ratingsStars10_df)
+    ratingsShuffleStars10_df:DataFrame = shuffle(ratingsStars10_df, random_state=20)
+
+    folderCout:int = 5
+    rowCount:int = len(ratingsShuffleStars10_df)
+    folderSize:int = round(rowCount / folderCout)
+
+    ratingsStars10Folds_dict = {}
+    for fi in range(folderCout):
+        testI_df:DataFrame = ratingsShuffleStars10_df.iloc[fi*folderSize:(fi+1)*folderSize]
+        trainI_df:DataFrame = ratingsShuffleStars10_df[~ratingsShuffleStars10_df.index.isin(testI_df.index)]
+        ratingsStars10Folds_dict[fi] = (trainI_df, testI_df)
+        trainI_df.to_csv("./data/ml1m/ml1m-Fold" + str(fi) + "-train.tsv", sep="\t", index=False, header=False)
+        testI_df.to_csv("./data/ml1m/ml1m-Fold" + str(fi) + "-test.tsv", sep="\t", index=False, header=False)
+
+    foldI:int
+    for foldI, ratingsOfFoldI_df in ratingsStars10Folds_dict.items():
+        ratingsOfFoldTrainI_df:DataFrame = ratingsOfFoldI_df[0]
+        ratingsOfFoldTestI_df:DataFrame = ratingsOfFoldI_df[1]
+        ratingsStars_dic:Dict[DataFrame] = makeGranularityOfDataset(ratingsOfFoldTrainI_df)
+        #print(ratingsStars_dic.keys())
+        for starsI, ratingsOfGranI_df in ratingsStars_dic.items():
+            saveTrainML(ratingsOfGranI_df, starsI, foldI)
+
+
+def saveTrainML(ratingsStars_df, starsI:int, foldI:int):
 
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for datasetPartI in datasetParts:
         partI = "Part0" + str(datasetPartI)
         if datasetPartI == 100:
             partI = "Part" + str(datasetPartI)
-        for starsI, ratingsStarI_df in ratingsStars_dic.items():
-            starsStrI:str = "0" + str(starsI)
-            if starsI == 10:
-                starsStrI: str = str(starsI)
-            ratingsStarSelI_df = ratingsStarI_df.copy().sample(frac=datasetPartI/100)
-            ratingsStarSelI_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars" + starsStrI + ".tsv", sep = "\t", index=False, header=False)
+        starsStrI:str = "0" + str(starsI)
+        if starsI == 10:
+            starsStrI: str = str(starsI)
+        ratingsStarSelI_df = ratingsStars_df.copy().sample(frac=datasetPartI/100)
+        ratingsStarSelI_df.to_csv("./data/ml1m/ml1m-" + partI + "-Stars" + starsStrI + "-Fold" + str(foldI) + ".tsv", sep = "\t", index=False, header=False)
 
 
 
@@ -47,24 +71,46 @@ def divideLTDataset():
                  names= ['userId','itemId','rating'],
                  delim_whitespace=True)
 
-    ratingsStars_dic:Dict[DataFrame] = divideGeneralDataset(ratingsStars10_df)
+    ratingsShuffleStars10_df:DataFrame = shuffle(ratingsStars10_df, random_state=20)
 
-    datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    folderCout:int = 5
+    rowCount:int = len(ratingsShuffleStars10_df)
+    folderSize:int = round(rowCount / folderCout)
+
+    ratingsStars10Folds_dict = {}
+    for fi in range(folderCout):
+        testI_df:DataFrame = ratingsShuffleStars10_df.iloc[fi*folderSize:(fi+1)*folderSize]
+        trainI_df:DataFrame = ratingsShuffleStars10_df[~ratingsShuffleStars10_df.index.isin(testI_df.index)]
+        ratingsStars10Folds_dict[fi] = (trainI_df, testI_df)
+        trainI_df.to_csv("./data/libraryThing/libraryThing-Fold" + str(fi) + "-train.tsv", sep="\t", index=False, header=False)
+        testI_df.to_csv("./data/libraryThing/libraryThing-Fold" + str(fi) + "-test.tsv", sep="\t", index=False, header=False)
+
+    foldI:int
+    for foldI, ratingsOfFoldI_df in ratingsStars10Folds_dict.items():
+        ratingsOfFoldTrainI_df:DataFrame = ratingsOfFoldI_df[0]
+        ratingsOfFoldTestI_df:DataFrame = ratingsOfFoldI_df[1]
+        ratingsStars_dic:Dict[DataFrame] = makeGranularityOfDataset(ratingsOfFoldTrainI_df)
+        #print(ratingsStars_dic.keys())
+        for starsI, ratingsOfGranI_df in ratingsStars_dic.items():
+            saveTrainLTT(ratingsOfGranI_df, starsI, foldI)
+
+
+def saveTrainLTT(ratingsStars_df, starsI:int, foldI:int):
+
+    datasetParts: List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for datasetPartI in datasetParts:
-        if datasetPartI < 100:
-            partI = "Part0" + str(datasetPartI)
-        else:
+        partI = "Part0" + str(datasetPartI)
+        if datasetPartI == 100:
             partI = "Part" + str(datasetPartI)
-        for starsI, ratingsStarI_df in ratingsStars_dic.items():
-            starsStrI:str = "0" + str(starsI)
-            if starsI == 10:
-                starsStrI: str = str(starsI)
-            ratingsStarSelI_df = ratingsStarI_df.copy().sample(frac=datasetPartI/100)
-            ratingsStarSelI_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars" + starsStrI + ".tsv", sep = "\t", index=False, header=False)
+        starsStrI: str = "0" + str(starsI)
+        if starsI == 10:
+            starsStrI: str = str(starsI)
+        ratingsStarSelI_df = ratingsStars_df.copy().sample(frac=datasetPartI / 100)
+        ratingsStarSelI_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars" + starsStrI + "-Fold" + str(foldI) + ".tsv", sep="\t", index=False, header=False)
 
 
 
-def divideGeneralDataset_(ratings10_df):
+def makeGranularityOfDataset_(ratings10_df):
     ratings08_df = ratings10_df.copy()  # 3U4 and 6U7    [3,4]->3, 5->4, 6->5, [7,8]->6, 9->7, 10->8
     ratings08_df["rating"] = ratings08_df["rating"].apply(lambda x: x - 1 if x in [4, 5, 6, 7] else x)
     ratings08_df["rating"] = ratings08_df["rating"].apply(lambda x: x - 2 if x in [8, 9, 10] else x)
@@ -84,8 +130,8 @@ def divideGeneralDataset_(ratings10_df):
     return (ratings02_df, ratings03_df, ratings05_df, ratings08_df)
 
 
-def divideGeneralDataset(ratings10_df):
-    print(ratings10_df.head(20))
+def makeGranularityOfDataset(ratings10_df):
+    #print(ratings10_df.head(20))
 
     ratingsNorm_df = ratings10_df.copy()
     # normalisation fnc    norm_rating = (rating - np.min(rating)) / (np.max(rating)-np.min(rating))
@@ -96,7 +142,7 @@ def divideGeneralDataset(ratings10_df):
     for maxStarI in [2,3,4,5,6,7,8,9,10]:
         ratingsI_df = ratingsNorm_df.copy()
         ratingsI_df["rating"] = ratingsI_df["rating"].apply(lambda nRating: np.round(nRating * (maxStarI - 1) +1))
-        r_dict[maxStarI] = ratingsI_df
+        r_dict[str(maxStarI)] = ratingsI_df
     return r_dict
 
 

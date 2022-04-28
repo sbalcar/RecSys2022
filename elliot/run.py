@@ -238,4 +238,7 @@ if __name__ == '__main__':
     #run_experiment("./config/ml1m10_LightGCN.yml")
 
     #run_experiment("./config/ml1m10_all.yml")
-    run_experiment("./config/lt10_all.yml")
+    #run_experiment("./config/lt10_all.yml")
+
+    #run_experiment("./config/a.yml")
+    run_experiment("./config/b.yml")
