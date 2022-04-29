@@ -28,7 +28,7 @@ def visualisation(df):
     plt.yticks(range(df.select_dtypes(['number']).shape[1]), df.select_dtypes(['number']).columns, fontsize=14)
     #cb = plt.colorbar(datasetParts)
     #cb.ax.tick_params(labelsize=14)
-    plt.title('Correlation Matrix', fontsize=16)
+    plt.title('Matrix', fontsize=16)
     plt.show()
 
 
@@ -37,10 +37,11 @@ if __name__ == "__main__":
     print(os.getcwd())
 
     datasetID:List[str] = ["libraryThing", "ml1m"]
-    datasetID:List[str] = ["libraryThing"]
+    #datasetID:List[str] = ["libraryThing"]
+    datasetID:List[str] = ["ml1m"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    datasetStarts:List[int] = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     r = [[[0 for _ in range(len(datasetParts))] for _ in range(len(datasetStarts))] for _ in range(len(datasetFolds))]
 

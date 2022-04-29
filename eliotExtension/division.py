@@ -132,13 +132,17 @@ def makeGranularityOfDataset_(ratings10_df):
 
 def makeGranularityOfDataset(ratings10_df):
     #print(ratings10_df.head(20))
+    r_dict:Dict = {}
+
+    ratings01_df = ratings10_df.copy()
+    ratings01_df["rating"] = ratings01_df["rating"].apply(lambda x: 1)
+    r_dict[1] = ratings01_df
 
     ratingsNorm_df = ratings10_df.copy()
     # normalisation fnc    norm_rating = (rating - np.min(rating)) / (np.max(rating)-np.min(rating))
     ratingsNorm_df["rating"] = ratingsNorm_df["rating"].apply(lambda rating: (rating -1) / (10-1))
 
     # normalisation fnc np.round(norm_rating * (k_max - k_min) + k_min)
-    r_dict:Dict = {}
     for maxStarI in [2,3,4,5,6,7,8,9,10]:
         ratingsI_df = ratingsNorm_df.copy()
         ratingsI_df["rating"] = ratingsI_df["rating"].apply(lambda nRating: np.round(nRating * (maxStarI - 1) +1))

@@ -21,7 +21,7 @@ class ExperimentBuilder:
      test_path: ../data/<datasetID>/<datasetID>-Fold<fold>-test.tsv
   top_k: 10
   evaluation:
-    simple_metrics: [nDCG, ItemCoverage, HR, RMSE]
+    simple_metrics: [nDCG, ItemCoverage, HR, RMSE, EPC, APLT]
 #  gpu: -1
   models:
 """
@@ -68,7 +68,7 @@ def generateBatches():
     datasetID:List[str] = ["libraryThing", "ml1m"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    datasetStarts:List[int] = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     for datasetIdI in datasetID:
         for datasetFoldI in datasetFolds:
@@ -81,9 +81,10 @@ def generateBatches():
                     if startsI == 10:
                         startsStrI = "10"
                     batchID:str = datasetIdI + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
-                    experimentStr:str = ExperimentBuilder.getExperimentStr(datasetIdI, datasetPartStrI, startsStrI,
-                                    str(datasetFoldI), [ExperimentBuilder.algiALS])
-                                    #[ExperimentBuilder.algItemKNN])
+                    experimentStr:str = ExperimentBuilder.getExperimentStr(
+                                    datasetIdI, datasetPartStrI, startsStrI, str(datasetFoldI),
+                                    #[ExperimentBuilder.algiALS])
+                                    [ExperimentBuilder.algItemKNN])
 
                     f = open("./batches" + os.sep + batchID + ".yml", "wt")
                     f.write(experimentStr)
