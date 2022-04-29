@@ -77,8 +77,8 @@ class DiscountedRelevance(AbstractRelevanceSingleton):
         :param threshold:
         :return:
         """
-        return {u: {i: 2 ** (score - rel_threshold + 1) - 1
-                    for i, score in test_items.items() if score >= rel_threshold}
+        return {u: {i: score
+                    for i, score in test_items.items()}
                 for u, test_items in test.items()}
 
 
