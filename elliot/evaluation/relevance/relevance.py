@@ -69,14 +69,6 @@ class DiscountedRelevance(AbstractRelevanceSingleton):
         return self._discounted_relevance.get(user, {}).get(item, 0)
 
     def _compute_user_gain_map(self, test, rel_threshold) -> t.Dict:
-        """
-        Method to compute the Gain Map:
-        rel = 2**(score - threshold + 1) - 1
-        :param sorted_item_predictions:
-        :param sorted_item_scores:
-        :param threshold:
-        :return:
-        """
         return {u: {i: score
                     for i, score in test_items.items()}
                 for u, test_items in test.items()}

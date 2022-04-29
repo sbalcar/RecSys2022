@@ -40,7 +40,7 @@ class ExperimentBuilder:
       meta:
         save_recs: True
 """
-    algMultiVAE = """    MultiVAE:   # autoencoders, multi_vae
+    algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
         save_recs: True
 """
@@ -85,6 +85,7 @@ def generateBatches():
                                     datasetIdI, datasetPartStrI, startsStrI, str(datasetFoldI),
                                     #[ExperimentBuilder.algiALS])
                                     [ExperimentBuilder.algItemKNN])
+                                    #[ExperimentBuilder.algEASER])
 
                     f = open("./batches" + os.sep + batchID + ".yml", "wt")
                     f.write(experimentStr)
