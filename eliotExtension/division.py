@@ -142,7 +142,7 @@ def makeGranularityOfDataset(ratings10_df):
     for maxStarI in [2,3,4,5,6,7,8,9,10]:
         ratingsI_df = ratingsNorm_df.copy()
         ratingsI_df["rating"] = ratingsI_df["rating"].apply(lambda nRating: np.round(nRating * (maxStarI - 1) +1))
-        r_dict[str(maxStarI)] = ratingsI_df
+        r_dict[maxStarI] = ratingsI_df
     return r_dict
 
 
