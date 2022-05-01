@@ -65,10 +65,10 @@ class ExperimentBuilder:
 
 def generateBatches():
 
-    datasetID:List[str] = ["libraryThing", "ml1m"]
+    datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
-    datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
+    datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
 
     for datasetIdI in datasetID:
         for datasetFoldI in datasetFolds:

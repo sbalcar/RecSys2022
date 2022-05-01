@@ -37,8 +37,8 @@ if __name__ == "__main__":
     print(os.getcwd())
 
     datasetID:List[str] = ["libraryThing", "ml1m"]
-    #datasetID:List[str] = ["libraryThing"]
-    datasetID:List[str] = ["ml1m"]
+    datasetID:List[str] = ["libraryThing"]
+    #datasetID:List[str] = ["ml1m"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -70,7 +70,8 @@ if __name__ == "__main__":
                     #print(resultFile)
                     results_df = pd.read_csv(path + os.sep + resultFile, header=0, delim_whitespace=True)
                     metric = results_df.iloc[0]["nDCG"]
-                    metric = results_df.iloc[0]["HR"]
+                    #metric = results_df.iloc[0]["HR"]
+                    metric = results_df.iloc[0]["RMSE"]
                     valuesI.append(metric)
                 avr = sum(valuesI) / len(valuesI)
                 columsI.append(avr)
