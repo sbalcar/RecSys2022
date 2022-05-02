@@ -44,7 +44,7 @@ def divideMl25mDataset():
     ratingsStars10_df = ratings_df.copy()
     ratingsStars10_df["rating"] = 2 * ratingsStars10_df["rating"]
 
-    moviesSel_df:DataFrame = movies_df[movies_df['title'].str.contains('2022|2021|2020|2019|2018|2017')]
+    moviesSel_df:DataFrame = movies_df[movies_df['title'].str.contains('2022|2021|2020|2019|2018|2017|2016')]
     moviesSelIds:List[int] = moviesSel_df['movieId'].tolist()
 
     ratingsSel2016_df = ratingsStars10_df[ratingsStars10_df['movieId'].isin(moviesSelIds)]
@@ -55,7 +55,10 @@ def divideMl25mDataset():
 
     ratingsSelmMore20r_df:DataFrame = ratingsSel2016_df[ratingsSel2016_df['userId'].isin(userIdsSelected)]
 
-#    divideMlDataset(ratingsStars10_df, "ml25m")
+#    print("numberOfRatings: " + str(len(ratingsSelmMore20r_df)))
+#    print("numberOfUses: " + str(len(set(ratingsSelmMore20r_df['userId'].tolist()))))
+#    print("numberOfMovies: " + str(len(set(ratingsSelmMore20r_df['movieId'].tolist()))))
+
     divideMlDataset(ratingsSelmMore20r_df, "ml25mSel2017")
 
 

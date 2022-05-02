@@ -32,6 +32,16 @@ class ExperimentBuilder:
       neighbors: 50
       similarity: cosine
 """
+    algHTItemKNN = """    ItemKNN:    # knn, item_knn, item_knn
+      meta:
+        verbose: True
+        hyper_max_evals: 20
+        hyper_opt_alg: tpe
+        save_recs: True
+      neighbors: [uniform, 50, 75]
+      similarity: [cosine, jaccard, dice, pearson, euclidean]
+      implementation: classical
+"""
     algSVDpp = """    SVDpp:
       meta:
         save_recs: True
@@ -40,6 +50,16 @@ class ExperimentBuilder:
       meta:
         save_recs: True
 """
+    algHTIALS = """    iALS:    # latent_factor_models, iALS, iALS
+      meta:
+        verbose: True
+        hyper_max_evals: 20
+        hyper_opt_alg: tpe
+        save_recs: True
+      factors: [uniform, 10, 50]
+      alpha: [uniform, 1, 5]
+      reg: [uniform, 10e-4, 10e-1]
+    """
     algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
         save_recs: True
@@ -65,7 +85,7 @@ class ExperimentBuilder:
 
 def generateBatches():
 
-    datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
+    datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2017"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
@@ -84,7 +104,9 @@ def generateBatches():
                     experimentStr:str = ExperimentBuilder.getExperimentStr(
                                     datasetIdI, datasetPartStrI, startsStrI, str(datasetFoldI),
                                     #[ExperimentBuilder.algiALS])
+                                    #[ExperimentBuilder.algHTIALS])
                                     [ExperimentBuilder.algItemKNN])
+                                    #[ExperimentBuilder.algHTItemKNN])
                                     #[ExperimentBuilder.algEASER])
 
                     f = open("./batches" + os.sep + batchID + ".yml", "wt")
