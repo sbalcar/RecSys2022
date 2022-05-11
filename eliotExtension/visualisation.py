@@ -13,37 +13,39 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-def visualisation(df):
+def visualisation(df, title:str, xticklabels:List[int], yticklabels:List[int]):
     batchPath = "input"
 
-#    rs = np.random.RandomState(0)
-#    df = pd.DataFrame(rs.rand(10, 10))
-#    print(df.head(20))
+    fig = plt.figure()
 
-    datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(df, interpolation='nearest')
+    fig.colorbar(cax)
 
+    plt.title(title, fontsize=16)
 
-    plt.matshow(df)
-    plt.xticks(range(df.select_dtypes(['number']).shape[1]), df.select_dtypes(['number']).columns, fontsize=14, rotation=45)
-    plt.yticks(range(df.select_dtypes(['number']).shape[1]), df.select_dtypes(['number']).columns, fontsize=14)
-    #cb = plt.colorbar(datasetParts)
-    #cb.ax.tick_params(labelsize=14)
-    plt.title('Matrix', fontsize=16)
-    plt.show()
+    ax.set_xticklabels([0] + xticklabels)
+    ax.set_yticklabels([0] + yticklabels)
+    #plt.show()
+    plt.savefig("visualisation" + os.sep + title + '.png')
 
 
 if __name__ == "__main__":
     os.chdir('../')
     print(os.getcwd())
 
-    datasetID:List[str] = ["libraryThing", "ml1m"]
+    #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     datasetID:List[str] = ["libraryThing"]
-    #datasetID:List[str] = ["ml1m"]
+    datasetID:List[str] = ["ml25mSel2016"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
-    datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
+    #datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
+    #algID:str = "EASER"
+    algID:str = "LightGCN"
+    metric:str = "nDCG"     #"nDCG", "HR", "RMSE"
 
-    r = [[[0 for _ in range(len(datasetParts))] for _ in range(len(datasetStarts))] for _ in range(len(datasetFolds))]
 
     for datasetIdI in datasetID:
         rows = []
@@ -58,7 +60,7 @@ if __name__ == "__main__":
                     startsStrI = "0" + str(startsI)
                     if startsI == 10:
                         startsStrI = "10"
-                    batchID:str = datasetIdI + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
+                    batchID:str = datasetIdI + "-Alg" + algID + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
 
                     path = "results" + os.sep + batchID + os.sep + "performance"
                     performanceFiles:str = os.listdir("results" + os.sep + batchID + os.sep + "performance")
@@ -69,17 +71,14 @@ if __name__ == "__main__":
                     resultFile = resultFiles[0]
                     #print(resultFile)
                     results_df = pd.read_csv(path + os.sep + resultFile, header=0, delim_whitespace=True)
-                    metric = results_df.iloc[0]["nDCG"]
-                    #metric = results_df.iloc[0]["HR"]
-                    metric = results_df.iloc[0]["RMSE"]
-                    valuesI.append(metric)
+                    metricI = results_df.iloc[0][metric]
+                    valuesI.append(metricI)
                 avr = sum(valuesI) / len(valuesI)
                 columsI.append(avr)
             rows.append(columsI)
-    print(r)
 
-    df = pd.DataFrame(rows, columns=datasetParts)
-    print(df)
+        df = pd.DataFrame(rows, columns=datasetParts)
+        print(df)
 
-
-    visualisation(df)
+        title:str = datasetIdI + "-" + algID + "-" + metric
+        visualisation(df, title, datasetParts, datasetStarts)
