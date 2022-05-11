@@ -9,12 +9,14 @@ from elliot.run import run_experiment
 
 class ExperimentBuilder:
 
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "EASER", "LightGCN"]
+
     experimentDef:str = """experiment:
-  dataset: <datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>
-  path_output_rec_result: results/<datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>/recs
-  path_output_rec_weight: results/<datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>/weight
-  path_output_rec_performance: results/<datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>/performance
-  path_log_folder: results/<datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>/log
+  dataset: <datasetID>-Part<datasetPart>-Alg<alg>-Stars<stars>-Fold<fold>
+  path_output_rec_result: results/<datasetID>-Alg<alg>-Part<datasetPart>-Stars<stars>-Fold<fold>/recs
+  path_output_rec_weight: results/<datasetID>-Alg<alg>-Part<datasetPart>-Stars<stars>-Fold<fold>/weight
+  path_output_rec_performance: results/<datasetID>-Alg<alg>-Part<datasetPart>-Stars<stars>-Fold<fold>/performance
+  path_log_folder: results/<datasetID>-Alg<alg>-Part<datasetPart>-Stars<stars>-Fold<fold>/log
   data_config:
      strategy: fixed
      train_path: ../data/<datasetID>/<datasetID>-Part<datasetPart>-Stars<stars>-Fold<fold>.tsv
@@ -28,54 +30,76 @@ class ExperimentBuilder:
 
     algItemKNN = """    ItemKNN:    # knn, item_knn, item_knn
       meta:
-        save_recs: True
+        verbose: True
+        save_recs: False
       neighbors: 50
       similarity: cosine
 """
     algHTItemKNN = """    ItemKNN:    # knn, item_knn, item_knn
       meta:
         verbose: True
+        save_recs: False
         hyper_max_evals: 20
         hyper_opt_alg: tpe
         save_recs: True
       neighbors: [uniform, 50, 75]
-      similarity: [cosine, jaccard, dice, pearson, euclidean]
+      similarity: [cosine, jaccard, dice, euclidean]
       implementation: classical
 """
     algSVDpp = """    SVDpp:
       meta:
-        save_recs: True
+        verbose: True
+        save_recs: False
 """
     algiALS = """    iALS:       # latent_factor_models, iALS, iALS
       meta:
-        save_recs: True
+        verbose: True
+        save_recs: False
 """
     algHTIALS = """    iALS:    # latent_factor_models, iALS, iALS
       meta:
         verbose: True
+        save_recs: False
         hyper_max_evals: 20
         hyper_opt_alg: tpe
-        save_recs: True
       factors: [uniform, 10, 50]
       alpha: [uniform, 1, 5]
       reg: [uniform, 10e-4, 10e-1]
     """
     algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
-        save_recs: True
+        verbose: True
+        save_recs: False
 """
     algLightGCN = """    LightGCN:   # graph_based, lightgcn, LightGCN
       meta:
-        save_recs: True
+        verbose: True
+        save_recs: False
 """
+    @staticmethod
+    def getAlgorithmByAlgID(algID:str):
+        if algID == "IALS":
+            return ExperimentBuilder.algiALS
+        elif algID == "HTIALS":
+            return ExperimentBuilder.algHTIALS
+        elif algID == "ItemKNN":
+            return ExperimentBuilder.algItemKNN
+        elif algID == "HTItemKNN":
+            return ExperimentBuilder.algHTItemKNN
+        elif algID == "EASER":
+            return ExperimentBuilder.algEASER
+        elif algID == "LightGCN":
+            return ExperimentBuilder.algLightGCN
+        return None
 
     @staticmethod
-    def getExperimentStr(datasetID:str, datasetPart:str, granularity:str, fold:str, algorithms:List[str]):
+    def getExperimentStr(datasetID:str, datasetPart:str, granularity:str, fold:str, algorithms:List[str], algID:List[str]):
 
         experimentStr = ExperimentBuilder.experimentDef.replace("<datasetID>", datasetID)
         experimentStr = experimentStr.replace("<datasetPart>", datasetPart)
         experimentStr = experimentStr.replace("<stars>", granularity)
         experimentStr = experimentStr.replace("<fold>", fold)
+        experimentStr = experimentStr.replace("<alg>", algID[0])
 
         for algorithmI in algorithms:
             experimentStr = experimentStr + algorithmI
@@ -85,7 +109,9 @@ class ExperimentBuilder:
 
 def generateBatches():
 
-    datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2017"]
+    #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
+    datasetID: List[str] = ["libraryThing", "ml25mSel2016"]
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "EASER", "LightGCN"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
@@ -100,18 +126,15 @@ def generateBatches():
                     startsStrI = "0" + str(startsI)
                     if startsI == 10:
                         startsStrI = "10"
-                    batchID:str = datasetIdI + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
-                    experimentStr:str = ExperimentBuilder.getExperimentStr(
-                                    datasetIdI, datasetPartStrI, startsStrI, str(datasetFoldI),
-                                    #[ExperimentBuilder.algiALS])
-                                    #[ExperimentBuilder.algHTIALS])
-                                    [ExperimentBuilder.algItemKNN])
-                                    #[ExperimentBuilder.algHTItemKNN])
-                                    #[ExperimentBuilder.algEASER])
-
-                    f = open("./batches" + os.sep + batchID + ".yml", "wt")
-                    f.write(experimentStr)
-                    f.close()
+                    for algIdI in agsIds:
+                        batchID:str = datasetIdI + "-Alg" + algIdI + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
+                        algStrI:str = ExperimentBuilder.getAlgorithmByAlgID(algIdI)
+                        experimentStr:str = ExperimentBuilder.getExperimentStr(
+                                        datasetIdI, datasetPartStrI, startsStrI, str(datasetFoldI), [algStrI], [algIdI])
+                        #getAlgorithmByAlgID
+                        f = open("./batches" + os.sep + batchID + ".yml", "wt")
+                        f.write(experimentStr)
+                        f.close()
 
 
 if __name__ == "__main__":
