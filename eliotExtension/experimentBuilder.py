@@ -9,7 +9,7 @@ from elliot.run import run_experiment
 
 class ExperimentBuilder:
 
-    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "EASER", "LightGCN"]
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN"]
 
     experimentDef:str = """experiment:
   dataset: <datasetID>-Part<datasetPart>-Alg<alg>-Stars<stars>-Fold<fold>
@@ -66,6 +66,13 @@ class ExperimentBuilder:
       alpha: [uniform, 1, 5]
       reg: [uniform, 10e-4, 10e-1]
     """
+    algUserKNN = """    UserKNN:   # autoencoders, EASE_R, ease_r
+      meta:
+        save_recs: False
+      neighbors: 50
+      similarity: cosine
+      implementation: classical
+"""
     algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
         verbose: True
@@ -86,6 +93,8 @@ class ExperimentBuilder:
             return ExperimentBuilder.algItemKNN
         elif algID == "HTItemKNN":
             return ExperimentBuilder.algHTItemKNN
+        elif algID == "UserKNN":
+            return ExperimentBuilder.algUserKNN
         elif algID == "EASER":
             return ExperimentBuilder.algEASER
         elif algID == "LightGCN":
@@ -111,7 +120,8 @@ def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     datasetID: List[str] = ["libraryThing", "ml25mSel2016"]
-    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "EASER", "LightGCN"]
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN"]
+    #agsIds:List[str] = ["UserKNN"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]

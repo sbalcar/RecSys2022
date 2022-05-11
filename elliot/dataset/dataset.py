@@ -52,6 +52,7 @@ class DataSetLoader(LoaderCoordinator):
 
             self.train_dataframe = pd.read_csv(path_train_data, sep="\t", header=None, names=self.column_names)
             self.test_dataframe = pd.read_csv(path_test_data, sep="\t", header=None, names=self.column_names)
+            print(self.train_dataframe.head(30))
 
             # self.train_dataframe, self.side_information = self.coordinate_information(self.train_dataframe, sides=config.data_config.side_information)
             # self.train_dataframe = pd.read_csv(path_train_data, sep="\t", header=None, names=self.column_names)
@@ -62,6 +63,7 @@ class DataSetLoader(LoaderCoordinator):
             self.logger.info(f"{path_train_data} - Loaded")
 
             if config.binarize == True or all(self.train_dataframe["rating"].isna()):
+                print("PREPIS JEDNICKOU")
                 self.test_dataframe["rating"] = 1
                 self.train_dataframe["rating"] = 1
 

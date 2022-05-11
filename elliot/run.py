@@ -241,4 +241,4 @@ if __name__ == '__main__':
     #run_experiment("./config/lt10_all.yml")
 
     #run_experiment("./config/a.yml")
-    run_experiment("./config/b.yml")
+    #run_experiment("./config/b.yml")

@@ -44,7 +44,7 @@ if __name__ == "__main__":
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
     #algID:str = "EASER"
     algID:str = "LightGCN"
-    metric:str = "nDCG"     #"nDCG", "HR", "RMSE"
+    metric:str = "EPC"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
 
 
     for datasetIdI in datasetID:
