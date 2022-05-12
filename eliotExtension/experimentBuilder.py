@@ -83,6 +83,17 @@ class ExperimentBuilder:
         verbose: True
         save_recs: False
 """
+    algSVDpp = """    SVDpp:   # latent_factor_models, SVDpp
+      meta:
+        verbose: True
+        save_recs: False
+"""
+    algPMF = """    PMF:   # latent_factor_models, PMF
+      meta:
+        verbose: True
+        save_recs: False
+    """
+
     @staticmethod
     def getAlgorithmByAlgID(algID:str):
         if algID == "IALS":
@@ -99,6 +110,10 @@ class ExperimentBuilder:
             return ExperimentBuilder.algEASER
         elif algID == "LightGCN":
             return ExperimentBuilder.algLightGCN
+        elif algID == "SVDpp":
+            return ExperimentBuilder.algSVDpp
+        elif algID == "PMF":
+            return ExperimentBuilder.algPMF
         return None
 
     @staticmethod
@@ -120,8 +135,8 @@ def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     datasetID: List[str] = ["libraryThing", "ml25mSel2016"]
-    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN"]
-    #agsIds:List[str] = ["UserKNN"]
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF"]
+    agsIds:List[str] = ["SVDpp", "PMF"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
