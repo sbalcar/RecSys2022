@@ -23,7 +23,7 @@ class ExperimentBuilder:
      test_path: ../data/<datasetID>/<datasetID>-Fold<fold>-test.tsv
   top_k: 10
   evaluation:
-    simple_metrics: [nDCG, ItemCoverage, HR, RMSE, EPC, APLT]
+    simple_metrics: [nDCG, ItemCoverage, HR, EPC, APLT]
 #  gpu: -1
   models:
 """
@@ -93,6 +93,16 @@ class ExperimentBuilder:
         verbose: True
         save_recs: False
     """
+    algDMF = """    DMF:   # neural, DMF
+      meta:
+        verbose: True
+        save_recs: False
+    """
+    algNAIS = """    NAIS:   # neural, NAIS
+      meta:
+        verbose: True
+        save_recs: False
+    """
 
     @staticmethod
     def getAlgorithmByAlgID(algID:str):
@@ -114,6 +124,10 @@ class ExperimentBuilder:
             return ExperimentBuilder.algSVDpp
         elif algID == "PMF":
             return ExperimentBuilder.algPMF
+        elif algID == "DMF":
+            return ExperimentBuilder.algDMF
+        elif algID == "NAIS":
+            return ExperimentBuilder.algNAIS
         return None
 
     @staticmethod
@@ -134,9 +148,10 @@ class ExperimentBuilder:
 def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
-    datasetID: List[str] = ["libraryThing", "ml25mSel2016"]
-    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF"]
-    agsIds:List[str] = ["SVDpp", "PMF"]
+    datasetID: List[str] = ["ml25mSel2016"]
+    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
+    #agsIds:List[str] = ["DMF", "NAIS"]
+    agsIds: List[str] = ["EASER"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
