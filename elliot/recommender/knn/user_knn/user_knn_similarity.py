@@ -12,6 +12,7 @@ class Similarity(object):
     """
 
     def __init__(self, data, num_neighbors, similarity, implicit):
+
         self._data = data
         self._ratings = data.train_dict
         self._num_neighbors = num_neighbors

@@ -76,6 +76,7 @@ class DiscountedRelevance(AbstractRelevanceSingleton):
 
 class BinaryRelevance(AbstractRelevanceSingleton):
     def __init__(self, test, rel_threshold):
+        #print({u: [(i,r) for i, r in test_items.items() if r >= rel_threshold] for u, test_items in test.items()})
         self._binary_relevance = {u: [i for i, r in test_items.items() if r >= rel_threshold] for u, test_items in test.items()}
 
     def get_user_rel_gains(self, user):

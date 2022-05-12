@@ -75,6 +75,7 @@ class nDCG(BaseMetric):
         gains: t.List = sorted(list(self._relevance.get_user_rel_gains(user).values()))
         n: int = min(len(gains), cutoff)
         m: int = len(gains)
+        #print(list(map(lambda g, r: gains[m - r - 1] * self._relevance.logarithmic_ranking_discount(r), gains, range(n))))
         return sum(map(lambda g, r: gains[m - r - 1] * self._relevance.logarithmic_ranking_discount(r), gains, range(n)))
 
     def compute_user_ndcg(self, user_recommendations: t.List, user, cutoff: int) -> float:
@@ -89,6 +90,13 @@ class nDCG(BaseMetric):
         dcg: float = sum(
             [self._relevance.get_rel(user, x) * self._relevance.logarithmic_ranking_discount(r)
              for r, x in enumerate([item for item, _ in user_recommendations]) if r < cutoff])
+
+        #print([self._relevance.get_rel(user, x)
+        #       for r, x in enumerate([item for item, _ in user_recommendations]) if r < cutoff])
+        #print([self._relevance.logarithmic_ranking_discount(r)
+        #     for r, x in enumerate([item for item, _ in user_recommendations]) if r < cutoff])
+        #print([item for item, _ in user_recommendations])
+        #1/0
         return dcg / idcg if dcg > 0 else 0
 
     def __user_ndcg(self, user_recommendations: t.List, user, cutoff: int):

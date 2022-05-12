@@ -52,7 +52,6 @@ class DataSetLoader(LoaderCoordinator):
 
             self.train_dataframe = pd.read_csv(path_train_data, sep="\t", header=None, names=self.column_names)
             self.test_dataframe = pd.read_csv(path_test_data, sep="\t", header=None, names=self.column_names)
-            print(self.train_dataframe.head(30))
 
             # self.train_dataframe, self.side_information = self.coordinate_information(self.train_dataframe, sides=config.data_config.side_information)
             # self.train_dataframe = pd.read_csv(path_train_data, sep="\t", header=None, names=self.column_names)

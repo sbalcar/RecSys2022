@@ -26,6 +26,9 @@ class RecMixin(object):
 
     def evaluate(self, it=None, loss=0):
         if (it is None) or (not (it + 1) % self._validation_rate):
+            print(type(self.evaluator))
+            print("k: " + str(self.evaluator.get_needed_recommendations()))
+            #print(self.evaluator.get_needed_recommendations())
             recs = self.get_recommendations(self.evaluator.get_needed_recommendations())
             result_dict = self.evaluator.eval(recs)
 

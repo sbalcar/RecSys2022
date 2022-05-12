@@ -147,6 +147,10 @@ class Evaluator(object):
             return results, statistical_results
 
     def _compute_needed_recommendations(self):
+        for m in self._metrics:
+            if m.needs_full_recommendations():
+                print("ssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+                print(m)
         full_recommendations_metrics = any([m.needs_full_recommendations() for m in self._metrics])
         full_recommendations_additional_metrics = any([metrics.parse_metric(metric["metric"]).needs_full_recommendations() for metric in self._complex_metrics])
         if full_recommendations_metrics:
