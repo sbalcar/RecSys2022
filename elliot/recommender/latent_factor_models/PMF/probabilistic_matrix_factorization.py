@@ -66,6 +66,8 @@ class PMF(RecMixin, BaseRecommenderModel):
 
         self._ratings = self._data.train_dict
         self._sp_i_train = self._data.sp_i_train
+        print(type(self._sp_i_train))
+        print(self._sp_i_train)
         self._i_items_set = list(range(self._num_items))
 
         self._sampler = pws.Sampler(self._data.i_train_dict)

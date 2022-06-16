@@ -104,14 +104,41 @@ def saveTrainML(ratingsStars_df, starsI:int, foldI:int, datasetId:str):
 
 def divideLTDataset():
     print("Divide LT Dataset")
+    import ast
 
-    ratingsStars10_df = pd.read_csv('data/libraryThing/testset.tsv',
-                 dtype= {'userId':np.int32,
-                         'itemId':np.int32,
-                         'rating':np.float64},
-                 header=0, #skiprows=1
-                 names= ['userId','itemId','rating'],
-                 delim_whitespace=True)
+    f = open("data" + os.sep + "libraryThing" + os.sep + "reviews.json", "r")
+    rows:List[dict] = []
+    for json_string in f:
+        lineDictI:dict = ast.literal_eval(json_string)
+        rows.append(lineDictI)
+
+    pd.set_option('max_columns', None)
+    ratingsStars5_df:DataFrame = DataFrame(rows)
+
+    ratingsStars5_df = ratingsStars5_df.dropna()
+    ratingsStars10_df = ratingsStars5_df
+    ratingsStars10_df["stars"] = 2 * ratingsStars10_df["stars"]
+
+    ratingsStars10_df["userID"] = ratingsStars10_df["user"]
+    ratingsStars10_df["itemID"] = ratingsStars10_df["work"]
+    ratingsStars10_df["rating"] = ratingsStars10_df["stars"]
+    ratingsStars10_df["timestamp"] = ratingsStars10_df["unixtime"]
+    ratingsStars10_df.pop("time")
+    ratingsStars10_df.pop("comment")
+    ratingsStars10_df.pop("flags")
+    ratingsStars10_df.pop("stars")
+    ratingsStars10_df.pop("nhelpful")
+    ratingsStars10_df.pop("user")
+    ratingsStars10_df.pop("unixtime")
+    ratingsStars10_df.pop("work")
+
+    print(ratingsStars10_df.head(10))
+
+    #print("work: " + str(len(list(set(ratingsStars10_df["work"])))))
+    #print("work: " + str(ratingsStars10_df["work"].nunique()))
+    #print("user: " + str(len(list(set(ratingsStars10_df["user"])))))
+    #print("user: " + str(ratingsStars10_df["user"].nunique()))
+    #print("size: " + str(ratingsStars10_df.shape[0]))
 
     ratingsShuffleStars10_df:DataFrame = shuffle(ratingsStars10_df, random_state=20)
 
@@ -194,8 +221,8 @@ def makeGranularityOfDataset(ratings10_df):
 
 def generateDatasets():
     #divideMl1mDataset()
-    divideMl25mDataset()
-    #divideLTDataset()
+    #divideMl25mDataset()
+    divideLTDataset()
 
 
 def mappingStarsInReduction():

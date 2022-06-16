@@ -41,8 +41,8 @@ class ExperimentBuilder:
         save_recs: False
         hyper_max_evals: 20
         hyper_opt_alg: tpe
-        save_recs: True
-      neighbors: [uniform, 50, 75]
+        save_recs: False
+      neighbors: [uniform, 1, 75]
       similarity: [cosine, jaccard, dice, euclidean]
       implementation: classical
 """
@@ -65,13 +65,24 @@ class ExperimentBuilder:
       factors: [uniform, 10, 50]
       alpha: [uniform, 1, 5]
       reg: [uniform, 10e-4, 10e-1]
-    """
+"""
     algUserKNN = """    UserKNN:   # autoencoders, EASE_R, ease_r
       meta:
         save_recs: False
       neighbors: 50
       similarity: cosine
       implementation: classical
+"""
+    algHTUserKNN = """    UserKNN:    # knn, item_knn, item_knn
+          meta:
+            verbose: True
+            save_recs: False
+            hyper_max_evals: 20
+            hyper_opt_alg: tpe
+            save_recs: False
+          neighbors: [uniform, 1, 75]
+          similarity: [cosine, jaccard, dice, euclidean]
+          implementation: classical
 """
     algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
@@ -116,6 +127,8 @@ class ExperimentBuilder:
             return ExperimentBuilder.algHTItemKNN
         elif algID == "UserKNN":
             return ExperimentBuilder.algUserKNN
+        elif algID == "HTUserKNN":
+            return ExperimentBuilder.algHTUserKNN
         elif algID == "EASER":
             return ExperimentBuilder.algEASER
         elif algID == "LightGCN":
@@ -148,10 +161,12 @@ class ExperimentBuilder:
 def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
-    datasetID: List[str] = ["ml25mSel2016"]
-    agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
+    datasetID:List[str] = ["ml25mSel2016"]
+    datasetID:List[str] = ["libraryThing"]
+    #agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
+    agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
     #agsIds:List[str] = ["DMF", "NAIS"]
-    agsIds: List[str] = ["EASER"]
+    #agsIds: List[str] = ["PMF"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]

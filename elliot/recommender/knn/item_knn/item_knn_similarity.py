@@ -24,7 +24,6 @@ class Similarity(object):
         else:
             self._URM = self._data.sp_i_train_ratings
         print(self._URM)
-        5/0
         self._users = self._data.users
         self._items = self._data.items
         self._private_users = self._data.private_users

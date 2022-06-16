@@ -23,8 +23,7 @@ class iALSModel(object):
         self._data = data
         self.random = random
         self.C = self._data.sp_i_train_ratings
-        print(self.C)
-        5/0
+        #print(self.C)
         if scaling == "linear":
             self.C.data = 1.0 + alpha * self.C.data
         elif scaling == "log":

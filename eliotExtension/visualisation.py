@@ -35,8 +35,8 @@ if __name__ == "__main__":
     print(os.getcwd())
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
-    datasetID:List[str] = ["libraryThing"]
-    #datasetID:List[str] = ["ml25mSel2016"]
+    #datasetID:List[str] = ["libraryThing"]
+    datasetID:List[str] = ["ml25mSel2016"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     #datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
@@ -44,8 +44,12 @@ if __name__ == "__main__":
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
     #algID:str = "EASER"
     #algID:str = "LightGCN"
-    algID:str = "UserKNN"
-    metric:str = "RMSE"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
+    #algID:str = "UserKNN"
+    #algID:str = "ItemKNN"
+    algID: str = "IALS"
+    #algID:str = "PMF"
+    #algID:str = "PMF"
+    metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
 
 
     for datasetIdI in datasetID:
@@ -62,7 +66,7 @@ if __name__ == "__main__":
                     if startsI == 10:
                         startsStrI = "10"
                     batchID:str = datasetIdI + "-Alg" + algID + "-Part" + datasetPartStrI + "-Stars" + startsStrI + "-Fold" + str(datasetFoldI)
-
+                    print(batchID)
                     path = "results" + os.sep + batchID + os.sep + "performance"
                     performanceFiles:str = os.listdir("results" + os.sep + batchID + os.sep + "performance")
                     resultFiles = [x for x in performanceFiles if x.endswith('.tsv')]

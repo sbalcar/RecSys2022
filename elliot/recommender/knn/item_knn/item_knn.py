@@ -45,6 +45,8 @@ class ItemKNN(RecMixin, BaseRecommenderModel):
     @init_charger
     def __init__(self, data, config, params, *args, **kwargs):
 
+# variable_name, public_name, shortcut, default, reading_function, _
+
         self._params_list = [
             ("_num_neighbors", "neighbors", "nn", 40, int, None),
             ("_similarity", "similarity", "sim", "cosine", None, None),
