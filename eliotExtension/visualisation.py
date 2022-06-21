@@ -45,12 +45,14 @@ if __name__ == "__main__":
     #algID:str = "EASER"
     #algID:str = "LightGCN"
     #algID:str = "UserKNN"
+    #algID: str = "HTUserKNN"
     #algID:str = "ItemKNN"
-    algID: str = "IALS"
+    algID:str = "HTItemKNN"
+    #algID: str = "IALS"
     #algID:str = "PMF"
     #algID:str = "PMF"
     metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
-
+    #metric:str = "HR"
 
     for datasetIdI in datasetID:
         rows = []

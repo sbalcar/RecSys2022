@@ -162,7 +162,7 @@ def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     datasetID:List[str] = ["ml25mSel2016"]
-    datasetID:List[str] = ["libraryThing"]
+    datasetID:List[str] = ["libraryThingSel20"]
     #agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
     agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
     #agsIds:List[str] = ["DMF", "NAIS"]

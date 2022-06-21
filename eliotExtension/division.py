@@ -132,15 +132,37 @@ def divideLTDataset():
     ratingsStars10_df.pop("unixtime")
     ratingsStars10_df.pop("work")
 
-    print(ratingsStars10_df.head(10))
+    #ratingsStars10_df = ratingsStars10_df[0:10]
+    #print(ratingsStars10_df.head(10))
 
+    userIds:List[str] = ratingsStars10_df["userID"]
+    userIdsWithoutDuplicates:List[str] = list(dict.fromkeys(userIds))
+
+    userIdsDict:dict = dict([(userIdsWithoutDuplicates[i],i+1) for i in range(len(userIdsWithoutDuplicates))])
+    ratingsStars10_df["userID"] = ratingsStars10_df["userID"].apply(lambda userIdIStr: userIdsDict[userIdIStr])
+    #print(ratingsStars10_df.head(10))
+
+    ratingsItemCountDF:DataFrame = DataFrame(ratingsStars10_df.groupby('itemID')['rating'].count())
+    ratingsItemCountDF = ratingsItemCountDF[ratingsItemCountDF['rating'] >= 20]
+    itemIdsSelected:List[int] = ratingsItemCountDF.index.values.tolist()
+
+    ratingsSelmMore20rOfItems_df:DataFrame = ratingsStars10_df[ratingsStars10_df['itemID'].isin(itemIdsSelected)]
+
+    ratingsUserCountDF:DataFrame = DataFrame(ratingsSelmMore20rOfItems_df.groupby('userID')['rating'].count())
+    ratingsUserCountDF = ratingsUserCountDF[ratingsUserCountDF['rating'] >= 20]
+    userIdsSelected:List[int] = ratingsUserCountDF.index.values.tolist()
+
+    ratingsSelmMore20r_df:DataFrame = ratingsSelmMore20rOfItems_df[ratingsSelmMore20rOfItems_df['userID'].isin(userIdsSelected)]
+
+    #print()
+    #5/0
     #print("work: " + str(len(list(set(ratingsStars10_df["work"])))))
     #print("work: " + str(ratingsStars10_df["work"].nunique()))
     #print("user: " + str(len(list(set(ratingsStars10_df["user"])))))
     #print("user: " + str(ratingsStars10_df["user"].nunique()))
     #print("size: " + str(ratingsStars10_df.shape[0]))
 
-    ratingsShuffleStars10_df:DataFrame = shuffle(ratingsStars10_df, random_state=20)
+    ratingsShuffleStars10_df:DataFrame = shuffle(ratingsSelmMore20r_df, random_state=20)
 
     folderCout:int = 5
     rowCount:int = len(ratingsShuffleStars10_df)
@@ -151,8 +173,8 @@ def divideLTDataset():
         testI_df:DataFrame = ratingsShuffleStars10_df.iloc[fi*folderSize:(fi+1)*folderSize]
         trainI_df:DataFrame = ratingsShuffleStars10_df[~ratingsShuffleStars10_df.index.isin(testI_df.index)]
         ratingsStars10Folds_dict[fi] = (trainI_df, testI_df)
-        trainI_df.to_csv("./data/libraryThing/libraryThing-Fold" + str(fi) + "-train.tsv", sep="\t", index=False, header=False)
-        testI_df.to_csv("./data/libraryThing/libraryThing-Fold" + str(fi) + "-test.tsv", sep="\t", index=False, header=False)
+        trainI_df.to_csv("./data/libraryThingSel20/libraryThingSel20-Fold" + str(fi) + "-train.tsv", sep="\t", index=False, header=False)
+        testI_df.to_csv("./data/libraryThingSel20/libraryThingSel20-Fold" + str(fi) + "-test.tsv", sep="\t", index=False, header=False)
 
     foldI:int
     for foldI, ratingsOfFoldI_df in ratingsStars10Folds_dict.items():
@@ -175,7 +197,7 @@ def saveTrainLTT(ratingsStars_df, starsI:int, foldI:int):
         if starsI == 10:
             starsStrI: str = str(starsI)
         ratingsStarSelI_df = ratingsStars_df.copy().sample(frac=datasetPartI / 100)
-        ratingsStarSelI_df.to_csv("./data/libraryThing/libraryThing-" + partI + "-Stars" + starsStrI + "-Fold" + str(foldI) + ".tsv", sep="\t", index=False, header=False)
+        ratingsStarSelI_df.to_csv("./data/libraryThingSel20/libraryThingSel20-" + partI + "-Stars" + starsStrI + "-Fold" + str(foldI) + ".tsv", sep="\t", index=False, header=False)
 
 
 
