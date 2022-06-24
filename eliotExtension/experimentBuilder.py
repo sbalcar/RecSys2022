@@ -46,6 +46,15 @@ class ExperimentBuilder:
       similarity: [cosine, jaccard, dice, euclidean]
       implementation: classical
 """
+    algHTGridItemKNN = """    ItemKNN:    # knn, item_knn, item_knn
+          meta:
+            verbose: True
+            save_recs: False
+            save_recs: False
+          neighbors: [1, 3, 5, 8, 15, 20, 30, 45, 60, 75]
+          similarity: [cosine]
+          implementation: classical
+    """
     algSVDpp = """    SVDpp:
       meta:
         verbose: True
@@ -82,6 +91,15 @@ class ExperimentBuilder:
             save_recs: False
           neighbors: [uniform, 1, 75]
           similarity: [cosine, jaccard, dice, euclidean]
+          implementation: classical
+"""
+    algHTGridUserKNN = """    UserKNN:    # knn, item_knn, item_knn
+          meta:
+            verbose: True
+            save_recs: False
+            save_recs: False
+          neighbors: [1, 3, 5, 8, 15, 20, 30, 45, 60, 75]
+          similarity: [cosine]
           implementation: classical
 """
     algEASER = """    EASER:   # autoencoders, EASE_R, ease_r
@@ -125,10 +143,14 @@ class ExperimentBuilder:
             return ExperimentBuilder.algItemKNN
         elif algID == "HTItemKNN":
             return ExperimentBuilder.algHTItemKNN
+        elif algID == "HTGridItemKNN":
+            return ExperimentBuilder.algHTGridItemKNN
         elif algID == "UserKNN":
             return ExperimentBuilder.algUserKNN
         elif algID == "HTUserKNN":
             return ExperimentBuilder.algHTUserKNN
+        elif algID == "HTGridUserKNN":
+            return ExperimentBuilder.algHTGridUserKNN
         elif algID == "EASER":
             return ExperimentBuilder.algEASER
         elif algID == "LightGCN":
@@ -164,7 +186,8 @@ def generateBatches():
     datasetID:List[str] = ["ml25mSel2016"]
     datasetID:List[str] = ["libraryThingSel20"]
     #agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
-    agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
+    #agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
+    agsIds:List[str] = ["HTGridItemKNN", "HTGridUserKNN"]
     #agsIds:List[str] = ["DMF", "NAIS"]
     #agsIds: List[str] = ["PMF"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]

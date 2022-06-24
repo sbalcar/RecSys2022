@@ -36,7 +36,8 @@ if __name__ == "__main__":
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
     #datasetID:List[str] = ["libraryThing"]
-    datasetID:List[str] = ["ml25mSel2016"]
+    #datasetID:List[str] = ["ml25mSel2016"]
+    datasetID:List[str] = ["libraryThingSel20"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     #datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
@@ -51,8 +52,8 @@ if __name__ == "__main__":
     #algID: str = "IALS"
     #algID:str = "PMF"
     #algID:str = "PMF"
-    metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
-    #metric:str = "HR"
+    #metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
+    metric:str = "HR"
 
     for datasetIdI in datasetID:
         rows = []
