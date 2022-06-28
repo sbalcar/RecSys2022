@@ -47,13 +47,15 @@ if __name__ == "__main__":
     #algID:str = "LightGCN"
     #algID:str = "UserKNN"
     #algID: str = "HTUserKNN"
+    #algID: str = "HTGridUserKNN"
     #algID:str = "ItemKNN"
-    algID:str = "HTItemKNN"
+    #algID:str = "HTItemKNN"
+    algID:str = "HTGridItemKNN"
     #algID: str = "IALS"
     #algID:str = "PMF"
     #algID:str = "PMF"
-    #metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
-    metric:str = "HR"
+    metric:str = "nDCG"     # nDCG, ItemCoverage, HR, RMSE, EPC, APLT
+    #metric:str = "HR"
 
     for datasetIdI in datasetID:
         rows = []

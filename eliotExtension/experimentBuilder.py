@@ -75,6 +75,15 @@ class ExperimentBuilder:
       alpha: [uniform, 1, 5]
       reg: [uniform, 10e-4, 10e-1]
 """
+    algHTGridIALS = """    iALS:    # latent_factor_models, iALS, iALS
+          meta:
+            verbose: True
+            save_recs: False
+            hyper_opt_alg: tpe
+          factors: [35, 40, 45, 50]
+          alpha: [1, 2, 3, 4, 5]
+          reg: [10e-4, 10e-2, 10e-1]
+    """
     algUserKNN = """    UserKNN:   # autoencoders, EASE_R, ease_r
       meta:
         save_recs: False
@@ -139,6 +148,8 @@ class ExperimentBuilder:
             return ExperimentBuilder.algiALS
         elif algID == "HTIALS":
             return ExperimentBuilder.algHTIALS
+        elif algID == "HTGridIALS":
+            return ExperimentBuilder.algHTGridIALS
         elif algID == "ItemKNN":
             return ExperimentBuilder.algItemKNN
         elif algID == "HTItemKNN":
@@ -183,11 +194,13 @@ class ExperimentBuilder:
 def generateBatches():
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
-    datasetID:List[str] = ["ml25mSel2016"]
-    datasetID:List[str] = ["libraryThingSel20"]
+    datasetID:List[str] = ["ml25mSel2016", "libraryThingSel20"]
+    #datasetID:List[str] = ["ml25mSel2016"]
+    #datasetID:List[str] = ["libraryThingSel20"]
     #agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
     #agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
-    agsIds:List[str] = ["HTGridItemKNN", "HTGridUserKNN"]
+    #agsIds:List[str] = ["HTGridItemKNN", "HTGridUserKNN"]
+    agsIds:List[str] = ["HTGridIALS"]
     #agsIds:List[str] = ["DMF", "NAIS"]
     #agsIds: List[str] = ["PMF"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
