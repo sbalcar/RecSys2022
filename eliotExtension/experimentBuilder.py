@@ -76,13 +76,12 @@ class ExperimentBuilder:
       reg: [uniform, 10e-4, 10e-1]
 """
     algHTGridIALS = """    iALS:    # latent_factor_models, iALS, iALS
-          meta:
-            verbose: True
-            save_recs: False
-            hyper_opt_alg: tpe
-          factors: [35, 40, 45, 50]
-          alpha: [1, 2, 3, 4, 5]
-          reg: [10e-4, 10e-2, 10e-1]
+      meta:
+        verbose: True
+        save_recs: False
+      factors: [10, 30, 50]
+      alpha: [1, 3, 5]
+      reg: [10e-4, 10e-2, 10e-1]
     """
     algUserKNN = """    UserKNN:   # autoencoders, EASE_R, ease_r
       meta:
