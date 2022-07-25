@@ -49,15 +49,29 @@ def divideMl25mDataset():
 
     ratingsSel2016_df = ratingsStars10_df[ratingsStars10_df['movieId'].isin(moviesSelIds)]
 
-    ratingsUserCountDF:DataFrame = DataFrame(ratingsSel2016_df.groupby('userId')['rating'].count())
+
+    ratingsItemCountDF:DataFrame = DataFrame(ratingsSel2016_df.groupby('movieId')['rating'].count())
+    ratingsItemCountDF = ratingsItemCountDF[ratingsItemCountDF['rating'] >= 20]
+    itemIdsSelected:List[int] = ratingsItemCountDF.index.values.tolist()
+
+    ratingsSelmMore20rOfItems_df:DataFrame = ratingsSel2016_df[ratingsSel2016_df['movieId'].isin(itemIdsSelected)]
+
+
+#    ratingsUserCountDF:DataFrame = DataFrame(ratingsSel2016_df.groupby('userId')['rating'].count())
+#    ratingsUserCountDF = ratingsUserCountDF[ratingsUserCountDF['rating'] >= 20]
+#    userIdsSelected:List[int] = ratingsUserCountDF.index.values.tolist()
+#
+#    ratingsSelmMore20r_df:DataFrame = ratingsSel2016_df[ratingsSel2016_df['userId'].isin(userIdsSelected)]
+
+    ratingsUserCountDF:DataFrame = DataFrame(ratingsSelmMore20rOfItems_df.groupby('userId')['rating'].count())
     ratingsUserCountDF = ratingsUserCountDF[ratingsUserCountDF['rating'] >= 20]
     userIdsSelected:List[int] = ratingsUserCountDF.index.values.tolist()
 
-    ratingsSelmMore20r_df:DataFrame = ratingsSel2016_df[ratingsSel2016_df['userId'].isin(userIdsSelected)]
+    ratingsSelmMore20r_df:DataFrame = ratingsSelmMore20rOfItems_df[ratingsSelmMore20rOfItems_df['userId'].isin(userIdsSelected)]
 
-#    print("numberOfRatings: " + str(len(ratingsSelmMore20r_df)))
-#    print("numberOfUses: " + str(len(set(ratingsSelmMore20r_df['userId'].tolist()))))
-#    print("numberOfMovies: " + str(len(set(ratingsSelmMore20r_df['movieId'].tolist()))))
+    print("numberOfRatings: " + str(len(ratingsSelmMore20r_df)))
+    print("numberOfUses: " + str(len(set(ratingsSelmMore20r_df['userId'].tolist()))))
+    print("numberOfMovies: " + str(len(set(ratingsSelmMore20r_df['movieId'].tolist()))))
 
     divideMlDataset(ratingsSelmMore20r_df, "ml25mSel2017")
 
@@ -243,8 +257,8 @@ def makeGranularityOfDataset(ratings10_df):
 
 def generateDatasets():
     #divideMl1mDataset()
-    #divideMl25mDataset()
-    divideLTDataset()
+    divideMl25mDataset()
+    #divideLTDataset()
 
 
 def mappingStarsInReduction():

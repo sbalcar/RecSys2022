@@ -35,11 +35,11 @@ if __name__ == "__main__":
     print(os.getcwd())
 
     #datasetID:List[str] = ["libraryThing", "ml1m", "ml25mSel2016"]
-    #datasetID:List[str] = ["libraryThing"]
-    #datasetID:List[str] = ["ml25mSel2016"]
-    datasetID:List[str] = ["libraryThingSel20"]
+    datasetID:List[str] = ["ml25mSel2016"]
+    #datasetID:List[str] = ["libraryThingSel20"]
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     #datasetParts:List[int] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    #datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     #datasetStarts:List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
@@ -50,7 +50,11 @@ if __name__ == "__main__":
     #algID: str = "HTGridUserKNN"
     #algID:str = "ItemKNN"
     #algID:str = "HTItemKNN"
-    algID:str = "HTGridItemKNN"
+    #algID:str = "HTGridItemKNN"
+    #algID:str = "HTGridIALS"
+    #algID: str = "HTGridEASER"
+    #algID: str = "HTGridSVDpp"
+    algID: str = "HTGridFunkSVD"
     #algID: str = "IALS"
     #algID:str = "PMF"
     #algID:str = "PMF"

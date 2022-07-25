@@ -60,6 +60,33 @@ class ExperimentBuilder:
         verbose: True
         save_recs: False
 """
+    algHTGridSVDpp = """    SVDpp:
+      meta:
+        verbose: True
+        save_recs: False     
+      epochs: [10, 20]
+      batch_size: 512
+      factors: [10, 30, 50]
+      lr: [0.01, 0.001]
+      reg_w: 0.1
+      reg_b: 0.001
+"""
+    algFunkSVD = """    FunkSVD:
+      meta:
+        verbose: True
+        save_recs: False
+"""
+    algHTGridFunkSVD = """    FunkSVD:
+      meta:
+        verbose: True
+        save_recs: False     
+      epochs: [10, 20]
+      batch_size: 512
+      factors: [10, 30, 50]
+      lr: [0.01, 0.001]
+      reg_w: 0.1
+      reg_b: 0.001
+"""
     algiALS = """    iALS:       # latent_factor_models, iALS, iALS
       meta:
         verbose: True
@@ -105,7 +132,6 @@ class ExperimentBuilder:
           meta:
             verbose: True
             save_recs: False
-            save_recs: False
           neighbors: [1, 3, 5, 8, 15, 20, 30, 45, 60, 75]
           similarity: [cosine]
           implementation: classical
@@ -115,10 +141,26 @@ class ExperimentBuilder:
         verbose: True
         save_recs: False
 """
-    algLightGCN = """    LightGCN:   # graph_based, lightgcn, LightGCN
+    algHTGridEASER = """    EASER:   # autoencoders, EASE_R, ease_r
       meta:
         verbose: True
         save_recs: False
+      neighborhood: [1000, 3000, 60000]
+      l2_norm: [1e1, 1e3]
+    """
+
+    algHTGridLightGCN = """    LightGCN:   # graph_based, lightgcn, LightGCN
+      meta:
+        verbose: True
+        save_recs: False
+      lr: [0.0005, 0.005, 0.05]
+      epochs: [25, 50]
+      batch_size: 512
+      factors: [32, 64]
+      batch_size: 256
+      l_w: 0.1
+      n_layers: 1
+      n_fold: [1, 5]
 """
     algSVDpp = """    SVDpp:   # latent_factor_models, SVDpp
       meta:
@@ -135,11 +177,23 @@ class ExperimentBuilder:
         verbose: True
         save_recs: False
     """
+    algHTGridDMF = """    DMF:   # neural, DMF
+      meta:
+        verbose: True
+        save_recs: False      
+      lr: [10e-4, 10e-2, 10e-1]
+      reg: [10e-4, 10e-2, 10e-1]
+      user_mlp: (64,32)
+      item_mlp: (64,32)
+      similarity: cosine
+    """
     algNAIS = """    NAIS:   # neural, NAIS
       meta:
         verbose: True
         save_recs: False
     """
+
+
 
     @staticmethod
     def getAlgorithmByAlgID(algID:str):
@@ -163,14 +217,26 @@ class ExperimentBuilder:
             return ExperimentBuilder.algHTGridUserKNN
         elif algID == "EASER":
             return ExperimentBuilder.algEASER
+        elif algID == "HTGridEASER":
+            return ExperimentBuilder.algHTGridEASER
         elif algID == "LightGCN":
             return ExperimentBuilder.algLightGCN
+        elif algID == "HTGridLightGCN":
+            return ExperimentBuilder.algHTGridLightGCN
         elif algID == "SVDpp":
             return ExperimentBuilder.algSVDpp
+        elif algID == "HTGridSVDpp":
+            return ExperimentBuilder.algHTGridSVDpp
+        elif algID == "FunkSVD":
+            return ExperimentBuilder.algFunkSVD
+        elif algID == "HTGridFunkSVD":
+            return ExperimentBuilder.algHTGridFunkSVD
         elif algID == "PMF":
             return ExperimentBuilder.algPMF
         elif algID == "DMF":
             return ExperimentBuilder.algDMF
+        elif algID == "HTGridDMF":
+            return ExperimentBuilder.algHTGridDMF
         elif algID == "NAIS":
             return ExperimentBuilder.algNAIS
         return None
@@ -199,9 +265,16 @@ def generateBatches():
     #agsIds:List[str] = ["IALS", "HTIALS", "ItemKNN", "HTItemKNN", "UserKNN", "EASER", "LightGCN", "SVDpp", "PMF", "DMF", "NAIS"]
     #agsIds:List[str] = ["HTItemKNN", "HTUserKNN"]
     #agsIds:List[str] = ["HTGridItemKNN", "HTGridUserKNN"]
-    agsIds:List[str] = ["HTGridIALS"]
+    #agsIds:List[str] = ["IALS"]
+    #agsIds:List[str] = ["HTGridSVDpp"]
+    #agsIds:List[str] = ["FunkSVD"]
+    agsIds:List[str] = ["HTGridFunkSVD"]
+    #agsIds:List[str] = ["HTGridIALS"]
     #agsIds:List[str] = ["DMF", "NAIS"]
+    #agsIds:List[str] = ["HTGridEASER"]
+    #agsIds:List[str] = ["HTGridLightGCN"]
     #agsIds: List[str] = ["PMF"]
+    #agsIds:List[str] = ["HTGridDMF"] # prilis malo pameti i na klastr
     datasetFolds:List[int] = [0, 1, 2, 3, 4]
     datasetParts:List[int] = [20, 50, 70, 80, 90, 95, 100]
     datasetStarts:List[int] = [1, 2, 3, 5, 7, 10]
